@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solid_app/blocs/home_bloc.dart';
+import 'package:solid_app/widgets/custom_word_dialog.dart';
 import 'package:solid_app/widgets/loading_widget.dart';
 import 'package:solid_app/widgets/pages/color_page.dart';
 
@@ -52,10 +53,21 @@ class _HomeWidgetState extends State<HomeWidget> {
           FloatingActionButton(
             heroTag: 'new_word',
             child: Icon(Icons.edit),
-            onPressed: () => widget.bloc.changeWord('Hello world!'),
+            onPressed: () => _changeWordPressed(),
           )
         ],
       ),
+    );
+  }
+
+  void _changeWordPressed(){
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return ChangeWordDialog(
+          bloc: widget.bloc,
+        );
+      },
     );
   }
 
