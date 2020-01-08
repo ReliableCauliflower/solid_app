@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:solid_app/blocs/behavior_subject_bloc.dart';
 
 class HomeBloc extends BehaviorSubjectBloc<HomeState> {
@@ -36,6 +37,17 @@ class HomeBloc extends BehaviorSubjectBloc<HomeState> {
   void changeItemColor(int index){
     final newColorList = currentState.colorList;
     newColorList[index] = _getRandomColor();
+    currentState = HomeState.idle(newColorList);
+  }
+
+  Color getLabelColor(int index){
+    final color = currentState.colorList[index];
+    return color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+  }
+
+  void clear(){
+    final newColorList = currentState.colorList;
+    newColorList.clear();
     currentState = HomeState.idle(newColorList);
   }
 
