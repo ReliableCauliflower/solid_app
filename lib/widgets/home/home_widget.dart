@@ -22,6 +22,22 @@ class _HomeWidgetState extends State<HomeWidget> {
         ),
       ),
       body: _buildBody(),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          FloatingActionButton(
+            heroTag: 'add',
+            child: Icon(Icons.add),
+            onPressed: ()=> widget.bloc.addContainer(),
+          ),
+          const SizedBox(width: 8.0,),
+          FloatingActionButton(
+            heroTag: 'reload',
+            child: Icon(Icons.refresh),
+            onPressed: ()=> widget.bloc.refresh(),
+          )
+        ],
+      ),
     );
   }
 
@@ -32,13 +48,34 @@ class _HomeWidgetState extends State<HomeWidget> {
         if (!snapshot.hasData || snapshot.data.isLoading) {
           return LoadingWidget();
         }
-        return Center(
-          child: Text(
-            'Hello world!',
-            style: Theme.of(context).textTheme.body1,
-          ),
+        return GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 9),
+          itemBuilder: (context, index) => _buildGridItem(index),
+          itemCount: snapshot.data.colorList.length,
         );
       },
+    );
+  }
+
+  Widget _buildGridItem(int index) {
+    final sideSize = MediaQuery.of(context).size.width / 9;
+    final color = widget.bloc.currentState.colorList[index];
+    return InkWell(
+      onTap: () => widget.bloc.changeItemColor(index),
+      child: Container(
+        width: sideSize,
+        height: sideSize,
+        alignment: Alignment.center,
+        color: color,
+        child: Text(
+          widget.bloc.getColorLabel(index),
+          style: TextStyle(
+              fontSize: sideSize,
+              color:
+                  color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+        ),
+      ),
     );
   }
 }
