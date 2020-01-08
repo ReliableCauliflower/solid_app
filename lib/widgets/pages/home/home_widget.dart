@@ -102,7 +102,7 @@ class _HomeWidgetState extends State<HomeWidget> {
         child: Text(
           widget.bloc.getColorLabel(index),
           style: TextStyle(
-              fontSize: sideSize,
+              fontSize: sideSize - sideSize * 0.2,
               color: widget.bloc.getLabelColor(index)),
         ),
       ),
