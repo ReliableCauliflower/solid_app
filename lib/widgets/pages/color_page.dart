@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:solid_app/blocs/home_bloc.dart';
 import 'package:solid_app/widgets/loading_widget.dart';
 
-class ColorWidget extends StatefulWidget {
-  const ColorWidget({Key key, this.bloc, this.index}) : super(key: key);
+class ColorPage extends StatefulWidget {
+  const ColorPage({Key key, this.bloc, this.index}) : super(key: key);
 
   final HomeBloc bloc;
   final int index;
 
   @override
-  _ColorWidgetState createState() => _ColorWidgetState();
+  _ColorPageState createState() => _ColorPageState();
 }
 
-class _ColorWidgetState extends State<ColorWidget> {
+class _ColorPageState extends State<ColorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +36,7 @@ class _ColorWidgetState extends State<ColorWidget> {
                 color: snapshot.data.colorList[widget.index],
                 child: Center(
                   child: Text(
-                    widget.bloc.word,
+                    snapshot.data.word,
                     style: Theme.of(context)
                         .textTheme
                         .title

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:solid_app/blocs/home_bloc.dart';
 import 'package:solid_app/widgets/loading_widget.dart';
-import 'package:solid_app/widgets/pages/color_widget.dart';
+import 'package:solid_app/widgets/pages/color_page.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({Key key, @required this.bloc}) : super(key: key);
@@ -45,6 +45,14 @@ class _HomeWidgetState extends State<HomeWidget> {
             heroTag: 'clear',
             child: Icon(Icons.delete),
             onPressed: () => widget.bloc.clear(),
+          ),
+          const SizedBox(
+            width: 8.0,
+          ),
+          FloatingActionButton(
+            heroTag: 'new_word',
+            child: Icon(Icons.edit),
+            onPressed: () => widget.bloc.changeWord('Hello world!'),
           )
         ],
       ),
@@ -59,17 +67,17 @@ class _HomeWidgetState extends State<HomeWidget> {
           return LoadingWidget();
         }
         return GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 9),
-          itemBuilder: (context, index) => _buildGridItem(index),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: snapshot.data.word.length),
+          itemBuilder: (context, index) => _buildGridItem(index,snapshot.data.word),
           itemCount: snapshot.data.colorList.length,
         );
       },
     );
   }
 
-  Widget _buildGridItem(int index) {
-    final sideSize = MediaQuery.of(context).size.width / 9;
+  Widget _buildGridItem(int index,String word) {
+    final sideSize = MediaQuery.of(context).size.width / word.length;
     final color = widget.bloc.currentState.colorList[index];
     return GestureDetector(
       onLongPress: () => widget.bloc.changeItemColor(index),
@@ -93,7 +101,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     Navigator.push<void>(
         context,
         MaterialPageRoute(
-            builder: (context) => ColorWidget(
+            builder: (context) => ColorPage(
                   bloc: widget.bloc,
                   index: index,
                 )));

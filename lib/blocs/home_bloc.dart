@@ -8,47 +8,56 @@ class HomeBloc extends BehaviorSubjectBloc<HomeState> {
     getColorsList(9);
   }
 
-  final word = 'Hey there';
-
-  void getColorsList(int colorsNum) {
+  void getColorsList(int length, {String word}) {
     currentState = const HomeState.loading();
+    final colors = _generateRandomColors(length);
+    currentState = HomeState.idle(colors,word: word);
+  }
+
+  List<Color> _generateRandomColors(int length) {
     final colors = <Color>[];
-    for(var i = 0; i < colorsNum; ++i){
+    for (var i = 0; i < length; ++i) {
       colors.add(_getRandomColor());
     }
-    currentState = HomeState.idle(colors);
+    return colors;
   }
 
-  String getColorLabel(int index){
-    final position = index % word.length;
-    return word[position];
+  String getColorLabel(int index) {
+    final position = index % currentState.word.length;
+    return currentState.word[position];
   }
 
-  void addContainer(){
+  void addContainer() {
     final newColorList = currentState.colorList;
     newColorList.add(_getRandomColor());
-    currentState = HomeState.idle(newColorList);
+    currentState = HomeState.idle(newColorList, word: currentState.word);
   }
 
-  void refresh(){
-    getColorsList(currentState.colorList.length);
+  void refresh() {
+    getColorsList(currentState.colorList.length, word: currentState.word);
   }
 
-  void changeItemColor(int index){
+  void changeItemColor(int index) {
     final newColorList = currentState.colorList;
     newColorList[index] = _getRandomColor();
-    currentState = HomeState.idle(newColorList);
+    currentState = HomeState.idle(newColorList, word: currentState.word);
   }
 
-  Color getLabelColor(int index){
+  Color getLabelColor(int index) {
     final color = currentState.colorList[index];
     return color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
   }
 
-  void clear(){
+  void clear() {
     final newColorList = currentState.colorList;
     newColorList.clear();
-    currentState = HomeState.idle(newColorList);
+    currentState = HomeState.idle(newColorList, word: currentState.word);
+  }
+
+  void changeWord(String word) {
+    currentState = const HomeState.loading();
+    final colors = _generateRandomColors(word.length);
+    currentState = HomeState.idle(colors, word: word);
   }
 
   Color _getRandomColor() {
@@ -58,16 +67,20 @@ class HomeBloc extends BehaviorSubjectBloc<HomeState> {
 }
 
 class HomeState {
-  const HomeState(this._currentState, this.colorList);
+  const HomeState(this._currentState, this.colorList, this.word);
 
-  const HomeState.idle(this.colorList) : _currentState = HomeStateType.idle;
+  const HomeState.idle(this.colorList, {String word})
+      : _currentState = HomeStateType.idle,
+        word = word ?? 'Hey there';
 
   const HomeState.loading()
       : _currentState = HomeStateType.loading,
-        colorList = null;
+        colorList = null,
+        word = null;
 
   final HomeStateType _currentState;
   final List<Color> colorList;
+  final String word;
 
   bool get isLoading => _currentState == HomeStateType.loading;
 
