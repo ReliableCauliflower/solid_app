@@ -45,7 +45,7 @@ class _HomeWidgetState extends State<HomeWidget> {
           FloatingActionButton(
             heroTag: 'clear',
             child: Icon(Icons.delete),
-            onPressed: () => widget.bloc.clear(),
+            onPressed: () => widget.bloc.clearColors(),
           ),
           const SizedBox(
             width: 8.0,

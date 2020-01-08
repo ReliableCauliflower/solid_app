@@ -48,7 +48,7 @@ class HomeBloc extends BehaviorSubjectBloc<HomeState> {
     return color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
   }
 
-  void clear() {
+  void clearColors() {
     final newColorList = currentState.colorList;
     newColorList.clear();
     currentState = HomeState.idle(newColorList, word: currentState.word);
